@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css"
+		integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<style>
+		.box {
+			padding: 1em;
+			align-items: center;
+		}
+
+		.center {
+			text-align: center;
+		}
+
+		div {
+			vertical-align: middle;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="elm-app"></div>
+
+	<script src="elm.js"></script>
+	<script>
+		var app = Elm.Main.init({
+			node: document.getElementById("elm-app")
+		});      
+	</script>
+</body>
+
+</html>
