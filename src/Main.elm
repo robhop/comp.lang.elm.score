@@ -1,4 +1,4 @@
-module Main exposing (Model, Msg(..), init, main, update, view)
+module Main exposing (main)
 
 import Browser
 import Html exposing (..)
@@ -37,7 +37,7 @@ init : Model
 init =
     { players =
         [ Player 0 "Robert" "https://avatars2.githubusercontent.com/u/6553283?s=460&v=4" 10
-        , Player 1 "Torbjørn" "https://avatars2.githubusercontent.com/u/191559?s=400&v=4" 5
+        , Player 1 "Torbjørn" "https://avatars2.githubusercontent.com/u/191559?s=400&v=4" 15
         ]
     , newName = ""
     , newAvatar = ""
@@ -50,8 +50,8 @@ init =
 
 type Msg
     = Increment Int
-    | TypeName String
-    | TypeAvatar String
+    | InputName String
+    | InputAvatar String
     | Submit
 
 
@@ -61,10 +61,10 @@ update msg model =
         Increment id ->
             { model | players = addToPlayerScore id 2 model.players }
 
-        TypeName input ->
+        InputName input ->
             { model | newName = input }
 
-        TypeAvatar input ->
+        InputAvatar input ->
             { model | newAvatar = input }
 
         Submit ->
@@ -107,34 +107,40 @@ view model =
                 )
     in
     div [ class "pure-g" ]
-        [ div [ class "pure-u-2-3" ]
-            (div [ class "pure-g box" ]
-                [ h3 [ class "pure-u-1-1 center" ] [ text "Stilling" ]
-                ]
-                :: List.map renderPlayer sorted
-            )
-        , div [ class "pure-u-1-3" ] [ p [] [ renderNewPlayerForm model ] ]
+        [ div [ class "pure-u-1" ] [ h1 [] [ text "Ka e stillingen" ] ]
+        , div [ class "pure-u-3-5" ]
+            [ div
+                [ class "pure-g" ]
+                (List.map
+                    renderPlayer
+                    sorted
+                )
+            ]
+        , div [ class "pure-u-2-5" ] [ renderNewPlayerForm model ]
         ]
 
 
 renderPlayer : Player -> Html Msg
 renderPlayer player =
-    div [ class "pure-g box" ]
-        [ div [ class "pure-u-1-3" ] [ img [ src player.avatar, width 50, height 50, class "pure-img" ] [] ]
-        , div [ class "pure-u-1-3" ] [ text (player.name ++ " -> " ++ String.fromInt player.score) ]
-        , div [ class "pure-u-1-3" ] [ button [ onClick (Increment player.id) ] [ text "+" ] ]
+    div [ class "pure-u-1" ]
+        [ div [ class "pure-g box" ]
+            [ div [ class "pure-u-1-4" ] [ img [ src player.avatar, width 50, height 50, class "pure-img" ] [] ]
+            , div [ class "pure-u-1-4" ] [ text player.name ]
+            , div [ class "pure-u-1-4" ] [ text (String.fromInt player.score) ]
+            , div [ class "pure-u-1-4" ] [ button [ onClick (Increment player.id) ] [ text "+" ] ]
+            ]
         ]
 
 
 renderNewPlayerForm : Model -> Html Msg
 renderNewPlayerForm model =
-    div [ class "pure-g box" ]
-        [ h3 [ class "pure-u center" ]
-            [ text "Ny spiller" ]
+    div [ class "pure-g" ]
+        [ div [ class "pure-u-1" ]
+            [ h3 [] [ text "Ny spiller" ] ]
         , div
-            [ class "pure-u" ]
-            [ p [] [ input [ type_ "text", placeholder "Navn", onInput TypeName, value model.newName ] [] ]
-            , p [] [ input [ type_ "text", placeholder "Avatar", onInput TypeAvatar, value model.newAvatar ] [] ]
+            [ class "pure-u-1" ]
+            [ p [] [ input [ type_ "text", placeholder "Navn", onInput InputName, value model.newName ] [] ]
+            , p [] [ input [ type_ "text", placeholder "Avatar", onInput InputAvatar, value model.newAvatar ] [] ]
             , p [] [ button [ onClick Submit ] [ text "Legg til" ] ]
             ]
         ]
