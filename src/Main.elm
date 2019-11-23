@@ -59,7 +59,7 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Increment id ->
-            { model | players = List.map (updateModelScore id 2) model.players }
+            { model | players = addToPlayerScore id 2 model.players }
 
         TypeName input ->
             { model | newName = input }
@@ -79,12 +79,17 @@ update msg model =
                 model
 
 
-updateModelScore id value item =
-    if item.id == id then
-        { item | score = item.score + value }
+addToPlayerScore : Int -> Int -> List Player -> List Player
+addToPlayerScore id value players =
+    List.map
+        (\item ->
+            if item.id == id then
+                { item | score = item.score + value }
 
-    else
-        item
+            else
+                item
+        )
+        players
 
 
 
@@ -112,6 +117,7 @@ view model =
         ]
 
 
+renderPlayer : Player -> Html Msg
 renderPlayer player =
     div [ class "pure-g box" ]
         [ div [ class "pure-u-1-3" ] [ img [ src player.avatar, width 50, height 50, class "pure-img" ] [] ]
@@ -120,6 +126,7 @@ renderPlayer player =
         ]
 
 
+renderNewPlayerForm : Model -> Html Msg
 renderNewPlayerForm model =
     div [ class "pure-g box" ]
         [ h3 [ class "pure-u center" ]
