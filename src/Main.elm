@@ -1,9 +1,10 @@
-module Main exposing (Player, addToPlayerScore, main)
+module Main exposing (main)
 
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
+import Players exposing (Player, Players, addPlayer, addToPlayerScore, sorted)
 
 
 
@@ -18,16 +19,8 @@ main =
 -- MODEL
 
 
-type alias Player =
-    { id : Int
-    , name : String
-    , avatar : String
-    , score : Int
-    }
-
-
 type alias Model =
-    { players : List Player
+    { players : Players
     , newName : String
     , newAvatar : String
     }
@@ -36,9 +29,9 @@ type alias Model =
 init : Model
 init =
     { players =
-        [ Player 0 "Robert" "https://avatars2.githubusercontent.com/u/6553283?s=460&v=4" 10
-        , Player 1 "Torbjørn" "https://avatars2.githubusercontent.com/u/191559?s=400&v=4" 15
-        ]
+        Players.empty
+            |> addPlayer "Torbjørn" "https://avatars2.githubusercontent.com/u/191559?s=400&v=4"
+            |> addPlayer "Robert" "https://avatars2.githubusercontent.com/u/6553283?s=460&v=4"
     , newName = ""
     , newAvatar = ""
     }
@@ -72,24 +65,11 @@ update msg model =
                 { model
                     | newAvatar = ""
                     , newName = ""
-                    , players = Player (List.length model.players) model.newName model.newAvatar 0 :: model.players
+                    , players = Players.addPlayer model.newName model.newAvatar model.players
                 }
 
             else
                 model
-
-
-addToPlayerScore : Int -> Int -> List Player -> List Player
-addToPlayerScore id value players =
-    List.map
-        (\item ->
-            if item.id == id then
-                { item | score = item.score + value }
-
-            else
-                item
-        )
-        players
 
 
 
@@ -98,14 +78,6 @@ addToPlayerScore id value players =
 
 view : Model -> Html Msg
 view model =
-    let
-        sorted =
-            List.reverse
-                (List.sortBy
-                    .score
-                    model.players
-                )
-    in
     div [ class "pure-g" ]
         [ div [ class "pure-u-1" ] [ h1 [] [ text "Ka e stillingen" ] ]
         , div [ class "pure-u-3-5" ]
@@ -113,7 +85,9 @@ view model =
                 [ class "pure-g" ]
                 (List.map
                     renderPlayer
-                    sorted
+                    (Players.sorted
+                        model.players
+                    )
                 )
             ]
         , div [ class "pure-u-2-5" ] [ renderNewPlayerForm model ]
