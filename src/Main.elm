@@ -107,7 +107,7 @@ view model =
                 )
     in
     div [ class "pure-g" ]
-        [ div [ class "pure-u-1" ] [ h1 [] [ text "Ka e stillingen" ] ]
+        [ div [ class "pure-u-1" ] [ h1 [] [ text "Scoreboard" ] ]
         , div [ class "pure-u-3-5" ]
             [ div
                 [ class "pure-g" ]
