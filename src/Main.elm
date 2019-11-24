@@ -4,7 +4,7 @@ import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
-import Players exposing (Player, Players, addPlayer, addToPlayerScore, sorted)
+import Players exposing (Player, Players)
 
 
 
@@ -30,8 +30,8 @@ init : Model
 init =
     { players =
         Players.empty
-            |> addPlayer "Torbjørn" "https://avatars2.githubusercontent.com/u/191559?s=400&v=4"
-            |> addPlayer "Robert" "https://avatars2.githubusercontent.com/u/6553283?s=460&v=4"
+            |> Players.addPlayer "Torbjørn" "https://avatars2.githubusercontent.com/u/191559?s=400&v=4"
+            |> Players.addPlayer "Robert" "https://avatars2.githubusercontent.com/u/6553283?s=460&v=4"
     , newName = ""
     , newAvatar = ""
     }
@@ -52,7 +52,7 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Increment id ->
-            { model | players = addToPlayerScore id 2 model.players }
+            { model | players = Players.addToPlayerScore id 2 model.players }
 
         InputName input ->
             { model | newName = input }
